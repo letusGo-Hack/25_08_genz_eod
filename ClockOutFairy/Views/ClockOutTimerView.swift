@@ -99,11 +99,6 @@ struct ClockOutTimerView: View {
                 await viewModel.checkAuthorizationStatus()
             }
         }
-        .onChange(of: scenePhase) { _, newPhase in
-            if newPhase == .background {
-                viewModel.startAndAutoEndActivity()
-            }
-        }
     }
 }
 

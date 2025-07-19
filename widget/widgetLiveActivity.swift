@@ -31,7 +31,7 @@ struct widgetLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: widgetAttributes.self) { context in
             let progress = min(1.0, max(0.0, context.state.progress))
-
+            
             GeometryReader { geometry in
                 progressGaugeView(progress: progress, remainTime: context.state.remainTime, width: geometry.size.width)
                     .frame(maxHeight: .infinity, alignment: .bottom)
@@ -93,20 +93,21 @@ struct widgetLiveActivity: Widget {
                     .padding(.leading, 15)
                 Spacer()
             }
-            
+            // FIXME: 길이 짤리는 문제 발생
+            let tempWidth = width - 50
             ZStack(alignment: .leading) {
                 Capsule()
                     .fill(Color.gray.opacity(0.3))
-                    .frame(width: width, height: 12)
+                    .frame(width: tempWidth, height: 12)
 
                 Capsule()
                     .fill(Color.blue)
-                    .frame(width: width * progress, height: 12)
+                    .frame(width: tempWidth, height: 12)
 
                 Image(systemName: "figure.run")
                     .resizable()
                     .frame(width: 20, height: 20)
-                    .offset(x: width * progress - 10, y: -20)
+                    .offset(x: tempWidth * progress - 10, y: -20)
                     .animation(.easeInOut(duration: 0.3), value: progress)
                     .foregroundStyle(.black)
             }

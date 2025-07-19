@@ -10,6 +10,7 @@ import Combine
 import SwiftUI
 import AlarmKit
 import ActivityKit
+import WidgetKit
 
 class ClockOutTimerViewModel: ObservableObject{
     @Published var timerString: String = "0:00:00"
@@ -17,9 +18,7 @@ class ClockOutTimerViewModel: ObservableObject{
     @Published var showProgressAnimation: Bool = false
     @Published var settings: ClockOutSettings = ClockOutSettings()
     @Published var isAuthorized = false
-    
-    
-    
+    @Published var currentActivity: Activity<widgetAttributes>? = nil
     
     
     private var timer: Timer?
@@ -117,14 +116,18 @@ class ClockOutTimerViewModel: ObservableObject{
         }
     }
     
-    private func startTimer() {
+    func startTimer() {
+        guard let clockOutTime = settings.clockOutTime else { return }
+        
         timer?.invalidate()
-        
+        initialTimerInterval = clockOutTime.timeIntervalSince(Date())
         progress = calculateProgress()
+
+        startLiveActivity(with: clockOutTime)
         
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             self?.updateTimer()
-        })
+        }
     }
     
     private func updateTimer() {
@@ -146,12 +149,13 @@ class ClockOutTimerViewModel: ObservableObject{
              }
              
              // 리마인더 체크
-             checkReminder(now: now,
-                           clockOutTime: clockOutTime)
+             checkReminder(now: now, clockOutTime: clockOutTime)
+            updateLiveActivity(clockOutTime: clockOutTime)
          } else {
              timerString = "퇴근할 시간 입니다!"
              timer?.invalidate()
              progress = 0
+             endLiveActivity()
          }
     }
     
@@ -227,11 +231,13 @@ class ClockOutTimerViewModel: ObservableObject{
         print("Alarm Set Successfully")
     }
     
-    func startAndAutoEndActivity() {
-        guard let clockOutTime = settings.clockOutTime else { return }
+    private func startLiveActivity(with clockOutTime: Date) {
         let attributes = widgetAttributes(region: .bottom)
-        let state = widgetAttributes.ContentState(remainTime: Constants.formattedRemainingTimeHHMM(clockOutTime), progress: 0.3)
-        
+        let state = widgetAttributes.ContentState(
+            remainTime: Constants.formattedRemainingTimeHHMM(clockOutTime),
+            progress: 1.0
+        )
+
         let content = ActivityContent(state: state, staleDate: nil)
 
         do {
@@ -240,15 +246,43 @@ class ClockOutTimerViewModel: ObservableObject{
                 content: content,
                 pushType: nil
             )
-
-            Task {
-                try await Task.sleep(for: .seconds(30))
-                await activity.end(content, dismissalPolicy: .immediate)
-                // dismissalPolicy: .after(Date().addingTimeInterval(5)
-                print("✅ 자동 종료됨")
-            }
+            self.currentActivity = activity
         } catch {
-            print("❌ 시작 실패: \(error)")
+            print("❌ Live Activity 시작 실패: \(error)")
+        }
+    }
+    
+    private func updateLiveActivity(clockOutTime: Date) {
+        guard let activity = currentActivity else { return }
+        
+        
+        let doubleValue = Double(progress)
+        let newProgress = (floor(doubleValue * 100) / 100) // - 0.1
+        
+        print("Progress: \(newProgress)")
+        let state = widgetAttributes.ContentState(
+            remainTime: Constants.formattedRemainingTimeHHMM(clockOutTime),
+            progress: progress
+        )
+
+        let content = ActivityContent(state: state, staleDate: nil)
+        Task {
+            await activity.update(content)
+        }
+    }
+    
+    private func endLiveActivity() {
+        guard let activity = currentActivity else { return }
+
+        let state = widgetAttributes.ContentState(
+            remainTime: "퇴근!",
+            progress: 0
+        )
+        let content = ActivityContent(state: state, staleDate: nil)
+
+        Task {
+            await activity.end(content, dismissalPolicy: .immediate)
+            self.currentActivity = nil
         }
     }
     

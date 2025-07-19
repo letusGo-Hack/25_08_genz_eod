@@ -46,9 +46,7 @@ struct widgetEntryView : View {
     
     var body: some View {
         VStack {
-            
             Text(Constants.formattedRemainingTime(entry.date))
-//            Text(Constants.formattedRemainingTime(endDate))
         }
         .glassEffect()
     }
