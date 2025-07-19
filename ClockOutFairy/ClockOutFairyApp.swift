@@ -11,7 +11,7 @@ import SwiftUI
 struct ClockOutFairyApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ClockOutTimerView()
         }
     }
 }
