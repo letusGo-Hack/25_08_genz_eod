@@ -9,14 +9,20 @@ import ActivityKit
 import WidgetKit
 import SwiftUI
 
+enum RegionPosition: String, Codable, Hashable {
+    case minimal
+    case bottom
+    case center
+    case compact
+}
+
 struct widgetAttributes: ActivityAttributes {
     public struct ContentState: Codable, Hashable {
         var remainTime: String
-        
+        var progress: Double
     }
-
-    // Fixed non-changing properties about your activity go here!
-    var name: String
+    
+    var region: RegionPosition
     
     var imageName: String = "Dynamic_Island_Check"
 }
@@ -24,59 +30,151 @@ struct widgetAttributes: ActivityAttributes {
 struct widgetLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: widgetAttributes.self) { context in
-            // Lock screen/banner UI goes here
-            VStack {
-                Text("Hello \(context.state.remainTime)")
-            }
-            .activityBackgroundTint(Color.cyan)
-            .activitySystemActionForegroundColor(Color.black)
+            let progress = min(1.0, max(0.0, context.state.progress))
+            GeometryReader { geometry in
+                VStack {
+                    HStack {
+                        Text("칼퇴까지 \(context.state.remainTime)")
+                            .font(.headline)
+                            .foregroundStyle(.black)
+                            .padding(.leading, 15)
+                        Spacer()
+                    }
+                    
+                    ZStack(alignment: .leading) {
+                        Capsule()
+                            .fill(Color.gray.opacity(0.3))
+                            .frame(width: geometry.size.width, height: 12)
 
+                        Capsule()
+                            .fill(Color.blue)
+                            .frame(width: geometry.size.width * progress, height: 12)
+                        
+                        Image(systemName: "figure.run")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .offset(x: geometry.size.width * progress - 10, y: -20)
+                            .animation(.easeInOut(duration: 0.3), value: progress)
+                            .foregroundStyle(.black)
+                    }
+                    .padding()
+                }
+                .frame(maxHeight: .infinity, alignment: .bottom)
+                .activityBackgroundTint(Color.white.opacity(0.5))
+                .activitySystemActionForegroundColor(Color.white.opacity(0.5))
+            }
+            .frame(height: 100)
         } dynamicIsland: { context in
             DynamicIsland {
-                // Expanded UI goes here.  Compose the expanded UI through
-                // various regions, like leading/trailing/center/bottom
-                DynamicIslandExpandedRegion(.leading) {
-                    Text("Leading")
-                }
-                DynamicIslandExpandedRegion(.trailing) {
-                    Text("Trailing")
-                }
                 DynamicIslandExpandedRegion(.bottom) {
-                    Text("Bottom \(context.state.remainTime)")
-                    // more content
+                    if context.attributes.region == .bottom {
+                        GeometryReader { geometry in
+                            // TODO: 수정 필요!
+                            let progress = min(1.0, max(0.0, context.state.progress))
+                            
+                            VStack {
+                                Spacer()
+
+                                ZStack(alignment: .leading) {
+                                    Capsule()
+                                        .fill(Color.gray.opacity(0.3))
+                                        .frame(height: 12)
+
+                                    Capsule()
+                                        .fill(Color.blue)
+                                        .frame(width: geometry.size.width * progress, height: 12)
+
+                                    Image(systemName: "figure.run")
+                                        .resizable()
+                                        .frame(width: 20, height: 20)
+                                        .offset(x: geometry.size.width * progress - 10, y: -16)
+                                        .animation(.easeInOut(duration: 0.3), value: progress)
+                                }
+                                .padding(.horizontal)
+                            }
+                            .frame(maxHeight: .infinity, alignment: .bottom)
+                        }
+                        .frame(height: 40)
+                    }
                 }
-            } compactLeading: {
+
+                DynamicIslandExpandedRegion(.center) {
+                    if context.attributes.region == .center {
+                        Text("Center 영역")
+                    }
+                }
+
+                DynamicIslandExpandedRegion(.leading) {
+                    if context.attributes.region == .compact {
+                        Text("Leading")
+                    }
+                }
+
+                DynamicIslandExpandedRegion(.trailing) {
+                    if context.attributes.region == .compact {
+                        Text("Trailing")
+                    }
+                }
+            }
+            compactLeading: {
                 Text("\(context.state.remainTime)")
             } compactTrailing: {
                 Image(context.attributes.imageName)
             } minimal: {
-                Text(context.state.remainTime)
+                Image(context.attributes.imageName)
             }
             .widgetURL(URL(string: "http://www.apple.com"))
-            .keylineTint(Color.red)
+            .keylineTint(Color.blue)
         }
     }
 }
 
 extension widgetAttributes {
-    fileprivate static var preview: widgetAttributes {
-        widgetAttributes(name: "World")
+    fileprivate static var previewBottom: widgetAttributes {
+        widgetAttributes(region: .bottom)
+    }
+    
+    fileprivate static var previewCenter: widgetAttributes {
+        widgetAttributes(region: .center)
     }
 }
 
 extension widgetAttributes.ContentState {
-    fileprivate static var smiley: widgetAttributes.ContentState {
-        widgetAttributes.ContentState(remainTime: "😀")
-     }
-     
-     fileprivate static var starEyes: widgetAttributes.ContentState {
-         widgetAttributes.ContentState(remainTime: "🤩")
+    fileprivate static var temp: widgetAttributes.ContentState {
+        widgetAttributes.ContentState(remainTime: "13:23", progress: 0.3)
      }
 }
 
-#Preview("Notification", as: .content, using: widgetAttributes.preview) {
+
+#Preview("Lock Screen", as: .content, using: widgetAttributes.previewBottom) {
    widgetLiveActivity()
 } contentStates: {
-    widgetAttributes.ContentState.smiley
-    widgetAttributes.ContentState.starEyes
+    widgetAttributes.ContentState.temp
 }
+
+
+#Preview("Compact", as: .dynamicIsland(.compact), using: widgetAttributes.previewBottom) {
+   widgetLiveActivity()
+} contentStates: {
+    widgetAttributes.ContentState.temp
+}
+
+
+#Preview("Center", as: .dynamicIsland(.expanded), using: widgetAttributes.previewCenter) {
+   widgetLiveActivity()
+} contentStates: {
+    widgetAttributes.ContentState.temp
+}
+
+#Preview("Bottom", as: .dynamicIsland(.expanded), using: widgetAttributes.previewBottom) {
+   widgetLiveActivity()
+} contentStates: {
+    widgetAttributes.ContentState.temp
+}
+
+#Preview("Minimal", as: .dynamicIsland(.minimal), using: widgetAttributes.previewCenter) {
+   widgetLiveActivity()
+} contentStates: {
+    widgetAttributes.ContentState.temp
+}
+
