@@ -259,7 +259,6 @@ class ClockOutTimerViewModel: ObservableObject{
         let doubleValue = Double(progress)
         let newProgress = (floor(doubleValue * 100) / 100) // - 0.1
         
-        print("Progress: \(newProgress)")
         let state = widgetAttributes.ContentState(
             remainTime: Constants.formattedRemainingTimeHHMM(clockOutTime),
             progress: progress
