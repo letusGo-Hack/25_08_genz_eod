@@ -22,10 +22,6 @@ struct ClockOutSettingsView: View {
             VStack(spacing: 0) {
                 NavigationHeader {
                     dismiss()
-                } onIconImageClicked: {
-                    
-                    
-                    
                 }
 
                 ScrollView {

@@ -19,7 +19,8 @@ class ClockOutTimerViewModel: ObservableObject{
     @Published var settings: ClockOutSettings = ClockOutSettings()
     @Published var isAuthorized = false
     @Published var currentActivity: Activity<widgetAttributes>? = nil
-    
+    @Published var showingCongratulations = false
+    @Published var isTimerRunning: Bool = false
     
     private var timer: Timer?
     private var initialTimerInterval: TimeInterval = 0
@@ -27,7 +28,46 @@ class ClockOutTimerViewModel: ObservableObject{
     
     init() {
         setupBindings()
+        setupNotificationObserver()
     }
+    
+    private func setupNotificationObserver() {
+         NotificationCenter.default.publisher(for: OpenAppIntent.showCongratulationsNotification)
+             .receive(on: DispatchQueue.main)
+             .sink { [weak self] notification in
+                 self?.handleAlarmNotification(notification)
+             }
+             .store(in: &cancellables)
+     }
+     
+     private func handleAlarmNotification(_ notification: Notification) {
+         // Stop timer and show congratulations
+         stopAndResetTimer()
+         showingCongratulations = true
+         
+         if let alarmID = notification.userInfo?["alarmID"] as? UUID {
+             print("Alarm triggered with ID: \(alarmID)")
+         }
+         
+         // 오늘 날짜로 데이터 저장 로직 추가
+         // 오늘 날짜를 가져옵니다.
+         let today = Calendar.current.component(.day, from: Date())
+         
+         var highlightedDays: [Int: HighlightType] = [:]
+         // 오늘 날짜의 하이라이트 정보를 칼퇴 성공(초록색)으로 변경합니다.
+         highlightedDays[today] = .earlyLeaveSuccess
+         print("오늘 날짜(\(today)일) 칼퇴 성공으로 변경됨.")
+         print("영구 하이라이트 날짜들: \(highlightedDays)")
+         
+         do {
+             // [Int: HighlightType] 딕셔너리를 Data로 인코딩합니다.
+             let encodedData = try JSONEncoder().encode(highlightedDays)
+             UserDefaults.standard.set(encodedData, forKey: "highlightedDaysData")
+             print("UserDefaults에 데이터 저장 성공: \(highlightedDays)")
+         } catch {
+             print("UserDefaults에 데이터 인코딩 및 저장 실패: \(error.localizedDescription)")
+         }
+     }
     
     func checkAuthorizationStatus() async {
          await MainActor.run {
@@ -101,6 +141,8 @@ class ClockOutTimerViewModel: ObservableObject{
         
         // Clear clock out time
         settings.clockOutTime = nil
+        
+        self.isTimerRunning = false
     }
     
     private func animateProgress() {
@@ -128,6 +170,8 @@ class ClockOutTimerViewModel: ObservableObject{
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             self?.updateTimer()
         }
+        
+        self.isTimerRunning = true
     }
     
     private func updateTimer() {
@@ -188,11 +232,13 @@ class ClockOutTimerViewModel: ObservableObject{
     }
     
     private func showReminder() {
-        // TODO: AlarmKit 사용
+        print("show Reminder")
         
     }
     
-    func setAlarm(with scheduleDate: Date) async throws {
+    func setAlarm(with scheduleDate: Date,
+                  isReminderAlarm: Bool,
+                  reminderMinutes: Int? = nil) async throws {
         ///  Alarm ID
         let id = UUID()
         
@@ -202,12 +248,12 @@ class ClockOutTimerViewModel: ObservableObject{
                                           systemImageName: "app.fill")
         /// Alert
         let alert = AlarmPresentation.Alert(
-            title: "야호~ 퇴근이다!!",
-            stopButton: .init(text: "퇴근하기",
+            title: !isReminderAlarm ? "야호~ 퇴근이다!!" : "퇴근 \(reminderMinutes ?? 5)분 전이에요. 조금만 더 힘을 내요!!",
+            stopButton: .init(text: "알람끄기",
                               textColor: .red,
                               systemImageName: "stop.fill"),
-            secondaryButton: nil,
-            secondaryButtonBehavior: .none)
+            secondaryButton: !isReminderAlarm ? secondaryButton : nil,
+            secondaryButtonBehavior: !isReminderAlarm ? .custom : nil)
         
         /// Presentation
         let presentation = AlarmPresentation(alert: alert)
@@ -222,7 +268,7 @@ class ClockOutTimerViewModel: ObservableObject{
         let config = AlarmManager.AlarmConfiguration(
             schedule: schedule,
             attributes: attributes,
-            secondaryIntent: nil
+            secondaryIntent: !isReminderAlarm ? OpenAppIntent(id: id): nil
         )
         
         /// Adding alarm to the System
