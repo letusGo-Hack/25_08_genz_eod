@@ -23,7 +23,7 @@ struct ClockOutSettingsView: View {
                 NavigationHeader {
                     dismiss()
                 } onIconImageClicked: {
-                    // TODO: 캘린더 화면이동
+                    
                     
                     
                 }

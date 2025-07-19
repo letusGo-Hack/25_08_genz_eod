@@ -10,6 +10,9 @@ import SwiftUI
 struct NavigationHeader: View {
     let onBack: () -> Void
     let onIconImageClicked: () -> Void
+    @State private var highlightedDays: [Int: HighlightType] = [6: .earlyLeaveSuccess,
+                                                                9: .overtime,
+                                                                12: .annualHalfDayLeave]
     
     var body: some View {
         ZStack {
@@ -28,11 +31,12 @@ struct NavigationHeader: View {
                 
                 Spacer()
                 
-                Image(systemName: "calendar")
-                    .foregroundColor(.accent)
-                    .onTapGesture {
-                        onIconImageClicked()
-                    }
+                NavigationLink {
+                    PremiumCalendarView(highlightedDays: $highlightedDays)
+                } label: {
+                    Image(systemName: "calendar")
+                        .foregroundColor(.accent)
+                }
             }
         }
         .padding()

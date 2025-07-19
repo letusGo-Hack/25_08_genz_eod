@@ -50,6 +50,10 @@ struct ClockOutTimerView: View {
                                 if viewModel.settings.clockOutTime != nil {
                                     viewModel.stopAndResetTimer()
                                     showingCongratulations = true
+                                    
+                                    // 오늘 날짜로 데이터 저장 로직 추가
+                                    
+                                    
                                 } else {
                                     showingSettings = true
                                 }
