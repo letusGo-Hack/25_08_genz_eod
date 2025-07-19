@@ -18,6 +18,10 @@ class ClockOutTimerViewModel: ObservableObject{
     @Published var settings: ClockOutSettings = ClockOutSettings()
     @Published var isAuthorized = false
     
+    
+    
+    
+    
     private var timer: Timer?
     private var initialTimerInterval: TimeInterval = 0
     private var cancellables = Set<AnyCancellable>()

@@ -41,10 +41,14 @@ struct SimpleEntry: TimelineEntry {
 
 struct widgetEntryView : View {
     var entry: Provider.Entry
-
+    
+    lazy var endDate = Calendar.current.date(byAdding: .minute, value: entry.configuration.remainingMinutes, to: Date())!
+    
     var body: some View {
         VStack {
+            
             Text(Constants.formattedRemainingTime(entry.date))
+//            Text(Constants.formattedRemainingTime(endDate))
         }
         .glassEffect()
     }
@@ -64,13 +68,13 @@ struct widget: Widget {
 extension ConfigurationAppIntent {
     fileprivate static var sample1: ConfigurationAppIntent {
         let intent = ConfigurationAppIntent()
-//        intent.descriptionText = "3시간 10분"
+        intent.descriptionText = "3시간 10분"
         return intent
     }
     
     fileprivate static var sample2: ConfigurationAppIntent {
         let intent = ConfigurationAppIntent()
-//        intent.descriptionText = "10분"
+        intent.descriptionText = "10분"
         return intent
     }
 }

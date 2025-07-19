@@ -9,10 +9,12 @@ import WidgetKit
 import AppIntents
 
 struct ConfigurationAppIntent: WidgetConfigurationIntent {
-    static var title: LocalizedStringResource { "Configuration" }
-    static var description: IntentDescription { "This is an example widget." }
+    static var title: LocalizedStringResource { "퇴근 위젯 설정" }
+    static var description: IntentDescription { "퇴근까지 남은 시간을 설정합니다." }
 
-    // An example configurable parameter.
-    @Parameter(title: "Favorite Emoji", default: "😃")
-    var favoriteEmoji: String
+    @Parameter(title: "퇴근까지 남은 시간(분)", default: 120)
+    var remainingMinutes: Int
+
+    @Parameter(title: "설명 텍스트", default: "퇴근까지 남음")
+    var descriptionText: String
 }
