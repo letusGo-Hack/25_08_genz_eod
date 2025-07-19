@@ -26,7 +26,6 @@ struct Provider: AppIntentTimelineProvider {
         let currentDate = Date()
         let refreshDate = Calendar.current.date(byAdding: .minute, value: 1, to: currentDate)!
         let entry = SimpleEntry(date: currentDate, configuration: configuration)
-        print("🔄 timeline() called at \(Date())")
         return Timeline(entries: [entry], policy: .after(refreshDate))
     }
 
@@ -47,6 +46,7 @@ struct widgetEntryView : View {
         VStack {
             Text(Constants.formattedRemainingTime(entry.date))
         }
+        .glassEffect()
     }
 }
 

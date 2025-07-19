@@ -35,8 +35,8 @@ struct widgetLiveActivity: Widget {
             GeometryReader { geometry in
                 progressGaugeView(progress: progress, remainTime: context.state.remainTime, width: geometry.size.width)
                     .frame(maxHeight: .infinity, alignment: .bottom)
-                    .activityBackgroundTint(Color.white.opacity(0.5))
-                    .activitySystemActionForegroundColor(Color.white.opacity(0.5))
+                    .activityBackgroundTint(Color.clear)
+                    .activitySystemActionForegroundColor(Color.clear)
             }
             .frame(height: 100)
             
