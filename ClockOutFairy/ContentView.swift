@@ -24,13 +24,12 @@ struct ContentView: View {
                 startAndAutoEndActivity()
             }
         }
-        
-        
     }
     
     func startAndAutoEndActivity() {
         let date = Calendar.current.date(byAdding: .minute, value: 135, to: Date())!
-        let attributes = widgetAttributes(region: .compact)
+        //let attributes = widgetAttributes(region: .compact)
+        let attributes = widgetAttributes(region: .bottom)
         let state = widgetAttributes.ContentState(remainTime: Constants.formattedRemainingTimeHHMM(date), progress: 0.3)
         
         let content = ActivityContent(state: state, staleDate: nil)
