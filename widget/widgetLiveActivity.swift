@@ -24,7 +24,7 @@ struct widgetAttributes: ActivityAttributes {
     
     var region: RegionPosition
     
-    var imageName: String = "Dynamic_Island_Check"
+    var imageName: String = "timer"
 }
 
 struct widgetLiveActivity: Widget {
