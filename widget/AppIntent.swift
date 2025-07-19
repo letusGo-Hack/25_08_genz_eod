@@ -7,12 +7,15 @@
 
 import WidgetKit
 import AppIntents
+import Foundation
 
 struct ConfigurationAppIntent: WidgetConfigurationIntent {
-    static var title: LocalizedStringResource { "Configuration" }
-    static var description: IntentDescription { "This is an example widget." }
+    static var title: LocalizedStringResource { "GenZ" }
+    static var description: IntentDescription { "End Of Date Widget." }
 
-    // An example configurable parameter.
-    @Parameter(title: "Favorite Emoji", default: "😃")
-    var favoriteEmoji: String
+    @Parameter(title: "time", default: "몇분")
+    var descriptionText: String
+    
+    @Parameter(title: "시간(분)", default: Date.now)
+    var durationMinutes: Date
 }

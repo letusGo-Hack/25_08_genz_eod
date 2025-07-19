@@ -51,6 +51,13 @@
 			);
 			target = 054985702E2B32ED00A62A7A /* widgetExtension */;
 		};
+		054985912E2B340800A62A7A /* Exceptions for "ClockOutFairy" folder in "widgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Resources/Constants.swift,
+			);
+			target = 054985702E2B32ED00A62A7A /* widgetExtension */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -64,6 +71,9 @@
 		};
 		F0BC8FF22E2B21A300DAB422 /* ClockOutFairy */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				054985912E2B340800A62A7A /* Exceptions for "ClockOutFairy" folder in "widgetExtension" target */,
+			);
 			path = ClockOutFairy;
 			sourceTree = "<group>";
 		};
@@ -254,7 +264,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ZDUPRML6B6;
+				DEVELOPMENT_TEAM = U7JXGAK6AA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = widget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = widget;
@@ -284,7 +294,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ZDUPRML6B6;
+				DEVELOPMENT_TEAM = U7JXGAK6AA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = widget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = widget;
@@ -435,7 +445,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ZDUPRML6B6;
+				DEVELOPMENT_TEAM = U7JXGAK6AA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -467,7 +477,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ZDUPRML6B6;
+				DEVELOPMENT_TEAM = U7JXGAK6AA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

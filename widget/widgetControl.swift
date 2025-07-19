@@ -10,23 +10,22 @@ import SwiftUI
 import WidgetKit
 
 struct widgetControl: ControlWidget {
-    static let kind: String = "kr.genz.ClockOutFairy.widget"
-
+    
     var body: some ControlWidgetConfiguration {
         AppIntentControlConfiguration(
-            kind: Self.kind,
+            kind: Constants.kind,
             provider: Provider()
         ) { value in
             ControlWidgetToggle(
                 "Start Timer",
                 isOn: value.isRunning,
-                action: StartTimerIntent(value.name)
+                action: StartTimerIntent(name: value.name, value: !value.isRunning)
             ) { isRunning in
                 Label(isRunning ? "On" : "Off", systemImage: "timer")
             }
         }
-        .displayName("Timer")
-        .description("A an example control that runs a timer.")
+        .displayName(Constants.displayName)
+        .description(Constants.description)
     }
 }
 
@@ -66,8 +65,9 @@ struct StartTimerIntent: SetValueIntent {
 
     init() {}
 
-    init(_ name: String) {
+    init(name: String, value: Bool) {
         self.name = name
+        self.value = value
     }
 
     func perform() async throws -> some IntentResult {
