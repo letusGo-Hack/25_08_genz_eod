@@ -10,7 +10,6 @@ import SwiftUI
 struct ClockOutTimerView: View {
     @StateObject private var viewModel = ClockOutTimerViewModel()
     @State private var showingSettings = false
-    @State private var showingCongratulations = false
     
     var body: some View {
         NavigationStack {
@@ -21,7 +20,7 @@ struct ClockOutTimerView: View {
                 VStack(spacing: 40) {
                     Spacer()
                     
-                    HeaderView()
+                    HeaderView(isTimerRunning: viewModel.isTimerRunning)
                     
                     TimerCardView(
                         timerString: viewModel.timerString,
@@ -49,7 +48,7 @@ struct ClockOutTimerView: View {
                             } else {
                                 if viewModel.settings.clockOutTime != nil {
                                     viewModel.stopAndResetTimer()
-                                    showingCongratulations = true
+                                    viewModel.showingCongratulations = true
                                     
                                     // 오늘 날짜로 데이터 저장 로직 추가
                                     
@@ -68,23 +67,36 @@ struct ClockOutTimerView: View {
                     viewModel.setupTimer()
                     
                     if let scheduledDate = newSettings.clockOutTime {
+                        if newSettings.isReminderEnabled {
+                            let reminderTime = scheduledDate.addingTimeInterval(-Double(newSettings.reminderMinutes * 60))
+                            
+                            Task {
+                                do {
+                                    try await viewModel.setAlarm(with: reminderTime,
+                                                                 isReminderAlarm: true,
+                                                                 reminderMinutes: newSettings.reminderMinutes)
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                            }
+                        }
+                        
                         Task {
                             do {
-                                try await viewModel.setAlarm(with: scheduledDate)
+                                try await viewModel.setAlarm(with: scheduledDate,
+                                                             isReminderAlarm: false)
                             } catch {
                                 print(error.localizedDescription)
                             }
                         }
                     }
-                    
-                    // TODO: viewModel에서 AlarmKit 사용한 메서드 호출하기
                 }
             }
             .overlay {
                    // Custom Alert
-                   if showingCongratulations {
+                if viewModel.showingCongratulations {
                        CongratulationsAlertView(
-                           isPresented: $showingCongratulations,
+                        isPresented: $viewModel.showingCongratulations,
                            onDismiss: { }
                        )
                    }

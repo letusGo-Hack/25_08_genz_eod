@@ -16,14 +16,14 @@ struct ReminderSettingsSection: View {
             HStack {
                 Image(systemName: "bell")
                     .foregroundStyle(.accent)
-                Text("퇴근 전 알림 설정")
+                Text("퇴근 시간 전 알림 설정")
                     .font(.system(size: 16, weight: .medium))
             }
             .padding(.horizontal)
             
             VStack(spacing: 16) {
                 HStack {
-                    Text("퇴근 알림")
+                    Text("퇴근 시간 전 알림")
                         .font(.system(size: 16))
                     
                     Spacer()
