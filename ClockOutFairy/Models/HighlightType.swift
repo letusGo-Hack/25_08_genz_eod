@@ -53,11 +53,4 @@ enum HighlightType: CaseIterable, Identifiable, Equatable, Codable {
         default: return nil
         }
     }
-
-    // 이 함수는 이제 사용되지 않습니다. Picker를 통해 직접 유형을 설정합니다.
-    func next() -> HighlightType? {
-        // 이 함수는 더 이상 캘린더 날짜 탭 시 하이라이트 유형 순환에 사용되지 않습니다.
-        // Picker를 통해 직접 유형을 설정합니다.
-        return nil
-    }
 }

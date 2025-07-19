@@ -8,8 +8,11 @@
 import SwiftUI
 
 struct PremiumCalendarView: View {
+    // UserDefaults에 데이터를 저장할 때 사용할 키입니다.
+    private static let highlightedDaysKey = "highlightedDaysData"
+    
     // ContentView로부터 하이라이트 정보를 Binding으로 받습니다.
-    @Binding var highlightedDays: [Int: HighlightType]
+    @State private var highlightedDays: [Int: HighlightType] = [:]
     
     // 현재 캘린더가 표시하는 월의 첫 날짜를 저장합니다.
     @State private var calendarDate: Date = Date()
@@ -91,7 +94,6 @@ struct PremiumCalendarView: View {
                 }
             }
             .padding(.horizontal, 5) // 요일 헤더에도 좌우 패딩을 추가합니다.
-            
             // 날짜 그리드
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 10) {
                 // 첫 주 시작 전 빈 칸 (1일의 요일에 따라 빈 칸 수를 조절)
@@ -165,7 +167,7 @@ struct PremiumCalendarView: View {
             
         }
         .padding() // 전체 뷰에 패딩을 추가합니다.
-        .navigationTitle("커스텀 캘린더") // 네비게이션 타이틀 (이 뷰가 네비게이션 스택 안에 있을 경우)
+        .navigationTitle("프리미엄 - 캘린더") // 네비게이션 타이틀 (이 뷰가 네비게이션 스택 안에 있을 경우)
         .onAppear {
             // 뷰가 나타날 때 현재 날짜로 Picker를 초기화합니다.
             selectedYear = Calendar.current.component(.year, from: calendarDate)
@@ -176,6 +178,9 @@ struct PremiumCalendarView: View {
         .onChange(of: currentlySelectedDay) { _ in
             // currentlySelectedDay가 변경될 때마다 Picker 값 업데이트
             updateLeaveTypePickerSelection()
+        }.onAppear {
+            // 뷰가 나타날 때 UserDefaults에서 데이터를 불러옵니다.
+            loadHighlightedDays()
         }
     }
     // currentlySelectedDay에 따라 퇴근 종류 Picker의 선택을 업데이트하는 함수
@@ -205,4 +210,38 @@ struct PremiumCalendarView: View {
             selectedLeaveTypeString = highlightedDays[day]?.description ?? "없음"
         }
     }
+    
+    // UserDefaults에서 하이라이트된 날짜 데이터를 불러오는 함수
+        private func loadHighlightedDays() {
+            if let savedData = UserDefaults.standard.data(forKey: Self.highlightedDaysKey) {
+                do {
+                    print("영구 하이라이트 날짜들!: \(highlightedDays)")
+                    // 저장된 Data를 [Int: HighlightType] 딕셔너리로 디코딩합니다.
+                    let decodedData = try JSONDecoder().decode([Int: HighlightType].self, from: savedData)
+                    print("영구 하이라이트 날짜들!: \(highlightedDays)")
+                    highlightedDays = decodedData
+                    print("UserDefaults에서 데이터 불러오기 성공: \(highlightedDays)")
+                } catch {
+                    print("UserDefaults에서 데이터 디코딩 실패: \(error.localizedDescription)")
+                    // 디코딩 실패 시 초기 예시 데이터로 설정
+                    setInitialExampleData()
+                }
+            } else {
+                // 저장된 데이터가 없으면 초기 예시 데이터로 설정합니다.
+                print("UserDefaults에 저장된 데이터가 없습니다. 초기 예시 데이터로 설정합니다.")
+                setInitialExampleData()
+            }
+        }
+    
+    // 초기 예시 데이터를 설정하는 함수
+        private func setInitialExampleData() {
+            // 오늘 날짜는 CustomCalendarGridExample에서 currentlySelectedDay로 관리하므로 여기에 포함하지 않습니다.
+            var initialData: [Int: HighlightType] = [
+                :
+            ]
+            // 현재 월의 날짜가 아닌 경우를 대비하여, daysInMonth 범위 내의 날짜만 추가하도록 로직을 추가할 수 있습니다.
+            // 현재는 예시이므로 단순하게 설정합니다.
+
+            highlightedDays = initialData
+        }
 }
