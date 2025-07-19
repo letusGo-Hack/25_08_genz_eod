@@ -11,12 +11,14 @@ import SwiftUI
 struct Provider: AppIntentTimelineProvider {
     // 위젯 미리보기
     func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), configuration: ConfigurationAppIntent())
+        let date = Calendar.current.date(byAdding: .minute, value: 35, to: Date())!
+        return SimpleEntry(date: date, configuration: ConfigurationAppIntent())
     }
     
     // 위젯이 빠르게 화면에 표시되어야 할 때 보여줄 “임시” 데이터
     func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> SimpleEntry {
-        SimpleEntry(date: Date(), configuration: configuration)
+        let date = Calendar.current.date(byAdding: .minute, value: 35, to: Date())!
+        return SimpleEntry(date: date, configuration: configuration)
     }
     
     // 위젯의 콘텐츠를 시간 흐름에 따라 어떻게 갱신할지를 정의
@@ -79,3 +81,4 @@ extension ConfigurationAppIntent {
     SimpleEntry(date: .now, configuration: .sample1)
     SimpleEntry(date: .now, configuration: .sample2)
 }
+

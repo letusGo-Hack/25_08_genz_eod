@@ -11,12 +11,14 @@ import SwiftUI
 
 struct widgetAttributes: ActivityAttributes {
     public struct ContentState: Codable, Hashable {
-        // Dynamic stateful properties about your activity go here!
-        var emoji: String
+        var remainTime: String
+        
     }
 
     // Fixed non-changing properties about your activity go here!
     var name: String
+    
+    var imageName: String = "Dynamic_Island_Check"
 }
 
 struct widgetLiveActivity: Widget {
@@ -24,7 +26,7 @@ struct widgetLiveActivity: Widget {
         ActivityConfiguration(for: widgetAttributes.self) { context in
             // Lock screen/banner UI goes here
             VStack {
-                Text("Hello \(context.state.emoji)")
+                Text("Hello \(context.state.remainTime)")
             }
             .activityBackgroundTint(Color.cyan)
             .activitySystemActionForegroundColor(Color.black)
@@ -40,15 +42,15 @@ struct widgetLiveActivity: Widget {
                     Text("Trailing")
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    Text("Bottom \(context.state.emoji)")
+                    Text("Bottom \(context.state.remainTime)")
                     // more content
                 }
             } compactLeading: {
-                Text("L")
+                Text("\(context.state.remainTime)")
             } compactTrailing: {
-                Text("T \(context.state.emoji)")
+                Image(context.attributes.imageName)
             } minimal: {
-                Text(context.state.emoji)
+                Text(context.state.remainTime)
             }
             .widgetURL(URL(string: "http://www.apple.com"))
             .keylineTint(Color.red)
@@ -64,11 +66,11 @@ extension widgetAttributes {
 
 extension widgetAttributes.ContentState {
     fileprivate static var smiley: widgetAttributes.ContentState {
-        widgetAttributes.ContentState(emoji: "😀")
+        widgetAttributes.ContentState(remainTime: "😀")
      }
      
      fileprivate static var starEyes: widgetAttributes.ContentState {
-         widgetAttributes.ContentState(emoji: "🤩")
+         widgetAttributes.ContentState(remainTime: "🤩")
      }
 }
 

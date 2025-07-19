@@ -44,6 +44,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		052182542E2B5A7C001ADD28 /* Exceptions for "widget" folder in "ClockOutFairy" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				widgetLiveActivity.swift,
+			);
+			target = F0BC8FEF2E2B21A300DAB422 /* ClockOutFairy */;
+		};
 		0549858B2E2B32EF00A62A7A /* Exceptions for "widget" folder in "widgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -54,6 +61,7 @@
 		054985912E2B340800A62A7A /* Exceptions for "ClockOutFairy" folder in "widgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				ContentView.swift,
 				Resources/Constants.swift,
 			);
 			target = 054985702E2B32ED00A62A7A /* widgetExtension */;
@@ -64,6 +72,7 @@
 		054985772E2B32ED00A62A7A /* widget */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
+				052182542E2B5A7C001ADD28 /* Exceptions for "widget" folder in "ClockOutFairy" target */,
 				0549858B2E2B32EF00A62A7A /* Exceptions for "widget" folder in "widgetExtension" target */,
 			);
 			path = widget;
@@ -448,6 +457,7 @@
 				DEVELOPMENT_TEAM = U7JXGAK6AA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -480,6 +490,7 @@
 				DEVELOPMENT_TEAM = U7JXGAK6AA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

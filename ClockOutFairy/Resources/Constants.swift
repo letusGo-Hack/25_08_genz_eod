@@ -33,4 +33,20 @@ struct Constants {
             return "\(totalMinutes)분 남았습니다."
         }
     }
+    
+    static let formattedRemainingTimeHHMM: (Date) -> String = { targetDate in
+        let now = Date()
+        let interval = Int(targetDate.timeIntervalSince(now))
+        
+        if interval < 60 {
+            return "\(interval)s"
+        }
+        
+        guard interval > 0 else { return "" }
+
+        let hours = interval / 3600
+        let minutes = (interval % 3600) / 60
+        
+        return String(format: "%02d:%02d", hours, minutes)
+    }
 }
