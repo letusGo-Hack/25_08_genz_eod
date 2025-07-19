@@ -14,8 +14,8 @@
             filePath = "ClockOutFairy/ViewModels/ClockOutTimerViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "155"
-            endingLineNumber = "155"
+            startingLineNumber = "156"
+            endingLineNumber = "156"
             landmarkName = "checkReminder(now:clockOutTime:)"
             landmarkType = "7">
          </BreakpointContent>

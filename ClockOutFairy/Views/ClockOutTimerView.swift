@@ -11,6 +11,7 @@ struct ClockOutTimerView: View {
     @StateObject private var viewModel = ClockOutTimerViewModel()
     @State private var showingSettings = false
     @State private var showingCongratulations = false
+    @Environment(\.scenePhase) private var scenePhase
     
     var body: some View {
         NavigationStack {
@@ -96,6 +97,11 @@ struct ClockOutTimerView: View {
             // Check authorization status on appear
             Task {
                 await viewModel.checkAuthorizationStatus()
+            }
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .background {
+                viewModel.startAndAutoEndActivity()
             }
         }
     }
