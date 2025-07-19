@@ -45,6 +45,25 @@ class ClockOutTimerViewModel: ObservableObject{
          if let alarmID = notification.userInfo?["alarmID"] as? UUID {
              print("Alarm triggered with ID: \(alarmID)")
          }
+         
+         // 오늘 날짜로 데이터 저장 로직 추가
+         // 오늘 날짜를 가져옵니다.
+         let today = Calendar.current.component(.day, from: Date())
+         
+         var highlightedDays: [Int: HighlightType] = [:]
+         // 오늘 날짜의 하이라이트 정보를 칼퇴 성공(초록색)으로 변경합니다.
+         highlightedDays[today] = .earlyLeaveSuccess
+         print("오늘 날짜(\(today)일) 칼퇴 성공으로 변경됨.")
+         print("영구 하이라이트 날짜들: \(highlightedDays)")
+         
+         do {
+             // [Int: HighlightType] 딕셔너리를 Data로 인코딩합니다.
+             let encodedData = try JSONEncoder().encode(highlightedDays)
+             UserDefaults.standard.set(encodedData, forKey: "highlightedDaysData")
+             print("UserDefaults에 데이터 저장 성공: \(highlightedDays)")
+         } catch {
+             print("UserDefaults에 데이터 인코딩 및 저장 실패: \(error.localizedDescription)")
+         }
      }
     
     func checkAuthorizationStatus() async {

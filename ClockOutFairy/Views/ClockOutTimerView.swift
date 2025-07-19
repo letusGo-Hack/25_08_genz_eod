@@ -71,13 +71,13 @@ struct ClockOutTimerView: View {
                 }.onChange(of: highlightedDays) {
                     // highlightedDays가 변경될 때마다 UserDefaults에 저장합니다.
                     do {
-                                // [Int: HighlightType] 딕셔너리를 Data로 인코딩합니다.
-                                let encodedData = try JSONEncoder().encode(highlightedDays)
-                                UserDefaults.standard.set(encodedData, forKey: Self.highlightedDaysKey)
-                                print("UserDefaults에 데이터 저장 성공: \(highlightedDays)")
-                            } catch {
-                                print("UserDefaults에 데이터 인코딩 및 저장 실패: \(error.localizedDescription)")
-                            }
+                        // [Int: HighlightType] 딕셔너리를 Data로 인코딩합니다.
+                        let encodedData = try JSONEncoder().encode(highlightedDays)
+                        UserDefaults.standard.set(encodedData, forKey: Self.highlightedDaysKey)
+                        print("UserDefaults에 데이터 저장 성공: \(highlightedDays)")
+                    } catch {
+                        print("UserDefaults에 데이터 인코딩 및 저장 실패: \(error.localizedDescription)")
+                    }
                 } // VStack
             } // ZStack
             .navigationBarHidden(true)
